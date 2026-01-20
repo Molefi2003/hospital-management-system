@@ -10,13 +10,15 @@ app.use(cors());
 app.use(express.json());
 
 // Database Connection
+const { Pool } = require('pg');
+
 const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'hospital_db',
-  password: 'admin123', 
-  port: 5432,
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
+
 
 // Test database connection
 pool.connect((err, client, release) => {
