@@ -1,0 +1,113 @@
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
+const BillingDashboard = () => {
+    const [allBills, setAllBills] = useState([]);
+
+    const fetchAllBills = async () => {
+        try {
+            const res = await axios.get('http://localhost:5000/billing/all');
+            setAllBills(res.data);
+        } catch (err) {
+            console.error("Error fetching all bills:", err);
+        }
+    };
+
+    useEffect(() => {
+        fetchAllBills();
+    }, []);
+
+    // NEW: The actual PDF generation logic
+    const downloadReceipt = (bill) => {
+        const doc = new jsPDF();
+        
+        // Header styling
+        doc.setFontSize(22);
+        doc.setTextColor(40);
+        doc.text("🏥 HMS CLINIC OFFICIAL RECEIPT", 105, 20, { align: "center" });
+
+        // Invoice Metadata
+        doc.setFontSize(12);
+        doc.text(`Invoice Number: #INV-${bill.id}`, 20, 40);
+        doc.text(`Date of Issue: ${new Date(bill.billing_date).toLocaleDateString()}`, 20, 50);
+        doc.text(`Patient Name: ${bill.full_name}`, 20, 60);
+        doc.text(`Status: PAID`, 20, 70);
+
+        // Table for Charges
+        doc.autoTable({
+            startY: 80,
+            head: [['Service Description', 'Total Amount']],
+            body: [
+                ['General Medical Consultation & Services', `P${bill.amount}`],
+                ['TOTAL COLLECTED', `P${bill.amount}`]
+            ],
+            theme: 'grid',
+            headStyles: { fillColor: [46, 204, 113] } // Match your #2ecc71 green
+        });
+
+        // Footer message
+        doc.text("Thank you for choosing our clinic.", 105, doc.lastAutoTable.finalY + 20, { align: "center" });
+        
+        // Save the file
+        doc.save(`Receipt_INV${bill.id}_${bill.full_name}.pdf`);
+    };
+
+    // Keep your original totalRevenue calculation
+    const totalRevenue = allBills
+        .filter(b => b.status === 'Paid')
+        .reduce((sum, b) => sum + parseFloat(b.amount), 0);
+
+    return (
+        <div className="table-section">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                <h2 style={{ color: '#27ae60' }}>💰 Global Finance Dashboard</h2>
+                <div style={{ background: '#2ecc71', color: 'white', padding: '10px 20px', borderRadius: '8px' }}>
+                    <strong>Total Revenue Collected: P{totalRevenue.toFixed(2)}</strong>
+                </div>
+            </div>
+
+            <table style={{ width: '100%', background: '#fff', borderRadius: '8px' }}>
+                <thead>
+                    <tr style={{ background: '#27ae60', color: 'white' }}>
+                        <th>Invoice ID</th>
+                        <th>Patient Name</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Method</th>
+                        <th>Action</th> {/* Added Action Column */}
+                    </tr>
+                </thead>
+                <tbody>
+                    {allBills.length > 0 ? (
+                        allBills.map(bill => (
+                            <tr key={bill.id}>
+                                <td>#INV-{bill.id}</td>
+                                <td><strong>{bill.full_name}</strong></td>
+                                <td>P{bill.amount}</td>
+                                <td style={{ color: bill.status === 'Paid' ? 'green' : 'red', fontWeight: 'bold' }}>
+                                    {bill.status}
+                                </td>
+                                <td>{new Date(bill.billing_date).toLocaleDateString()}</td>
+                                <td>{bill.payment_method || '---'}</td>
+                                <td>
+                                    {/* Action button appears only if bill is Paid */}
+                                    {bill.status === 'Paid' && (
+                                        <button 
+                                            onClick={() => downloadReceipt(bill)}
+                                            style={{ background: '#3498db', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}
+                                        >
+                                            🖨️ PDF Receipt
+                                        </button>
+                                    )}
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr><td colSpan="7">No billing records found.</td></tr>
+                    )}
+                </tbody>
+            </table>
+        </div>
+    );
+};

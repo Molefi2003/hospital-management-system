@@ -1,0 +1,43 @@
+.container { max-width: 900px; margin: auto; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+header { text-align: center; color: #2c3e50; border-bottom: 2px solid #3498db; margin-bottom: 20px; }
+.form-section { background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+form input, form textarea { display: block; width: 100%; margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+.btn-add { background: #27ae60; color: white; border: none; padding: 10px 20px; cursor: pointer; }
+.search-bar { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #3498db; border-radius: 20px; }
+table { width: 100%; border-collapse: collapse; box-shadow: 0 2px 15px rgba(0,0,0,0.1); }
+th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+th { background-color: #3498db; color: white; }
+.btn-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+.login-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f0f2f5;
+}
+.login-card {
+  background: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-align: center;
+}
+.login-card input {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 12px;
+  border: 1px solid #ddd;
+}
+.login-card button {
+  width: 100%;
+  padding: 10px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.badge { background: #e8f4fd; color: #3498db; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+.btn-back { background: #95a5a6; color: white; border: none; padding: 10px; cursor: pointer; margin-bottom: 20px; }
+.record-card { border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 8px; background: #fafafa; }
