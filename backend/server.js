@@ -1,7 +1,17 @@
+require('dotenv').config(); // <-- ADD THIS LINE FIRST
 const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
+
+// UPDATE YOUR POOL HERE
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
 
 const app = express();
 
