@@ -1,17 +1,8 @@
-require('dotenv').config(); // <-- ADD THIS LINE FIRST
+require('dotenv').config();
 const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
-
-// UPDATE YOUR POOL HERE
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
-
 
 const app = express();
 
@@ -19,16 +10,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Database Connection
-const { Pool } = require('pg');
-
+// Database Connection - SINGLE DECLARATION
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
 });
-
 
 // Test database connection
 pool.connect((err, client, release) => {
@@ -484,9 +472,9 @@ app.get('/health', async (req, res) => {
   }
 });
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server is running at http://localhost:${PORT}`);
+  console.log(`🚀 Server is running on port ${PORT}`);
   console.log(`📊 Health check: http://localhost:${PORT}/health`);
   console.log(`🔧 Database tables check: http://localhost:${PORT}/setup/check-tables`);
 });
