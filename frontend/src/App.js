@@ -10,7 +10,7 @@ const RecordPage = ({ patient, onBack }) => {
 
   useEffect(() => {
     const fetchRecords = () => {
-      axios.get(`http://localhost:5000/patients/${patient.id}/records`)
+      axios.get(`https://krpcc.onrender.com/patients/${patient.id}/records`)
         .then(res => setRecords(res.data))
         .catch(err => console.log(err));
     };
@@ -19,20 +19,20 @@ const RecordPage = ({ patient, onBack }) => {
 
   const handleAddRecord = async (e) => {
     e.preventDefault();
-    await axios.post('http://localhost:5000/records', {
+    await axios.post('https://krpcc.onrender.com/records', {
       patient_id: patient.id,
       doctor_name: 'Dr. Smith',
       diagnosis: newDiag.diagnosis,
       prescription: newDiag.prescription
     });
     
-    await axios.post('http://localhost:5000/billing', {
+    await axios.post('https://krpcc.onrender.com/billing', {
         patient_id: patient.id,
         amount: 250.00
     });
 
     setNewDiag({ diagnosis: '', prescription: '' });
-    const res = await axios.get(`http://localhost:5000/patients/${patient.id}/records`);
+    const res = await axios.get(`https://krpcc.onrender.com/patients/${patient.id}/records`);
     setRecords(res.data);
     alert("✅ Consultation Saved & Invoice Generated (P250.00)");
   };
@@ -89,7 +89,7 @@ const PharmacyPage = ({ onBack }) => {
   const [prescriptions, setPrescriptions] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/pharmacy/prescriptions')
+    axios.get('https://krpcc.onrender.com/pharmacy/prescriptions')
       .then(res => setPrescriptions(res.data))
       .catch(err => console.error(err));
   }, []);
@@ -133,7 +133,7 @@ const BillingDashboard = ({ onBack }) => {
 
     const fetchAllBills = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/billing/all');
+            const res = await axios.get('https://krpcc.onrender.com/billing/all');
             setAllBills(res.data);
         } catch (err) { console.error(err); }
     };
@@ -154,7 +154,7 @@ const BillingDashboard = ({ onBack }) => {
     const handlePayment = async (billId) => {
         const method = window.prompt("Payment Method (Cash/Card/Medical Aid):", "Cash");
         if (method) {
-            await axios.put(`http://localhost:5000/billing/${billId}/pay`, { method });
+            await axios.put(`https://krpcc.onrender.com/billing/${billId}/pay`, { method });
             alert("Payment Recorded!");
             fetchAllBills();
         }
@@ -215,7 +215,7 @@ const PatientsPage = ({ onBack }) => {
   const [apptData, setApptData] = useState({ date: '', time: '', reason: '' });
   const [activePatientForAppt, setActivePatientForAppt] = useState(null);
 
-  const url = 'http://localhost:5000/patients';
+  const url = 'https://krpcc.onrender.com/patients';
 
   useEffect(() => {
     fetchPatients();
@@ -241,7 +241,7 @@ const PatientsPage = ({ onBack }) => {
   const handleScheduleAppt = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/appointments', {
+      await axios.post('https://krpcc.onrender.com/appointments', {
         patient_id: activePatientForAppt.id,
         date: apptData.date,
         time: apptData.time,
@@ -332,7 +332,7 @@ const AppointmentsPage = ({ onBack }) => {
 
   const fetchTodayQueue = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/appointments');
+      const res = await axios.get('https://krpcc.onrender.com/appointments');
       const today = new Date().toISOString().split('T')[0];
       const filtered = res.data.filter(a => a.appointment_date.startsWith(today));
       setTodayQueue(filtered);
@@ -522,7 +522,7 @@ function App() {
     }
     
     try {
-      const res = await axios.post('http://localhost:5000/login', { username, password });
+      const res = await axios.post('https://krpcc.onrender.com/login', { username, password });
       console.log('Login response:', res.data);
       
       if (res.data.success) { 
@@ -549,11 +549,11 @@ function App() {
 
   const generateDailyReport = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/appointments');
+      const res = await axios.get('https://krpcc.onrender.com/appointments');
       const today = new Date().toISOString().split('T')[0];
       const todayAppts = res.data.filter(a => a.appointment_date.startsWith(today));
       
-      const billRes = await axios.get('http://localhost:5000/billing/all');
+      const billRes = await axios.get('https://krpcc.onrender.com/billing/all');
       const todayRevenue = billRes.data
         .filter(b => b.billing_date.startsWith(today) && b.status === 'Paid')
         .reduce((sum, b) => sum + parseFloat(b.amount), 0);

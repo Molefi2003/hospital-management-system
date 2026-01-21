@@ -10,8 +10,8 @@ const RecordPage = ({ patient, onBack }) => {
     const refreshData = useCallback(async () => {
         try {
             const [recordsRes, billsRes] = await Promise.all([
-                axios.get(`http://localhost:5000/patients/${patient.id}/records`),
-                axios.get(`http://localhost:5000/patients/${patient.id}/bills`)
+                axios.get(`https://krpcc.onrender.com/patients/${patient.id}/records`),
+                axios.get(`https://krpcc.onrender.com/patients/${patient.id}/bills`)
             ]);
             setRecords(recordsRes.data);
             setBills(billsRes.data);
@@ -29,14 +29,14 @@ const RecordPage = ({ patient, onBack }) => {
     const handleAddRecord = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/records', {
+            await axios.post('https://krpcc.onrender.com/records', {
                 patient_id: patient.id,
                 doctor_name: 'Dr. Smith',
                 diagnosis: newDiag.diagnosis,
                 prescription: newDiag.prescription
             });
 
-            await axios.post('http://localhost:5000/billing', {
+            await axios.post('https://krpcc.onrender.com/billing', {
                 patient_id: patient.id,
                 amount: 250.00
             });
@@ -57,7 +57,7 @@ const RecordPage = ({ patient, onBack }) => {
         
         if (method) {
             try {
-                await axios.put(`http://localhost:5000/billing/${billId}/pay`, { method: method });
+                await axios.put(`https://krpcc.onrender.com/billing/${billId}/pay`, { method: method });
                 alert(`💰 Payment of P250 received via ${method}!`);
                 refreshData();
             } catch (err) {

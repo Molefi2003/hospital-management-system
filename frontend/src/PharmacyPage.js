@@ -7,9 +7,9 @@ const PharmacyPage = () => {
 
   const fetchData = async () => {
     try {
-      const prescRes = await axios.get('http://localhost:5000/pharmacy/prescriptions');
+      const prescRes = await axios.get('https://krpcc.onrender.com/pharmacy/prescriptions');
       setPrescriptions(prescRes.data);
-      const invRes = await axios.get('http://localhost:5000/inventory');
+      const invRes = await axios.get('https://krpcc.onrender.com/inventory');
       setInventory(invRes.data);
     } catch (err) { console.error("Error fetching data:", err); }
   };
@@ -32,7 +32,7 @@ const PharmacyPage = () => {
   const handleAddMedicine = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/inventory', newMed);
+      await axios.post('https://krpcc.onrender.com/inventory', newMed);
       setNewMed({ name: '', batch: '', qty: 0, cost: 0, sale: 0, expiry: '', supplier: '' });
       fetchData();
       alert("✅ Stock updated successfully!");

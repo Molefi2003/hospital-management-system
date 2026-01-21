@@ -11,7 +11,7 @@ const AuditLogPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:5000/audit-logs')
+    axios.get('https://krpcc.onrender.com/audit-logs')
       .then(res => setLogs(res.data))
       .catch(err => console.error(err));
   }, []);
@@ -81,22 +81,22 @@ const RecordPage = ({ patient, onBack }) => {
   const [newDiag, setNewDiag] = useState({ diagnosis: '', prescription: '' });
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/patients/${patient.id}/records`)
+    axios.get(`https://krpcc.onrender.com/patients/${patient.id}/records`)
       .then(res => setRecords(res.data))
       .catch(err => console.log(err));
   }, [patient.id]);
 
   const handleAddRecord = async (e) => {
     e.preventDefault();
-    await axios.post('http://localhost:5000/records', {
+    await axios.post('https://krpcc.onrender.com/records', {
       patient_id: patient.id,
       doctor_name: 'Dr. Smith',
       diagnosis: newDiag.diagnosis,
       prescription: newDiag.prescription
     });
-    await axios.post('http://localhost:5000/billing', { patient_id: patient.id, amount: 250.00 });
+    await axios.post('https://krpcc.onrender.com/billing', { patient_id: patient.id, amount: 250.00 });
     setNewDiag({ diagnosis: '', prescription: '' });
-    const res = await axios.get(`http://localhost:5000/patients/${patient.id}/records`);
+    const res = await axios.get(`https://krpcc.onrender.com/patients/${patient.id}/records`);
     setRecords(res.data);
     alert("✅ Consultation Saved & Invoice Generated");
   };
@@ -129,7 +129,7 @@ const RecordPage = ({ patient, onBack }) => {
 const PharmacyPage = () => {
   const [prescriptions, setPrescriptions] = useState([]);
   useEffect(() => {
-    axios.get('http://localhost:5000/pharmacy/prescriptions').then(res => setPrescriptions(res.data));
+    axios.get('https://krpcc.onrender.com/pharmacy/prescriptions').then(res => setPrescriptions(res.data));
   }, []);
   return (
     <div className="container">
@@ -150,7 +150,7 @@ const PharmacyPage = () => {
 const BillingDashboard = () => {
     const [allBills, setAllBills] = useState([]);
     const fetchAllBills = async () => {
-      const res = await axios.get('http://localhost:5000/billing/all');
+      const res = await axios.get('https://krpcc.onrender.com/billing/all');
       setAllBills(res.data);
     };
     useEffect(() => { fetchAllBills(); }, []);
@@ -196,7 +196,7 @@ function App() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      axios.get('http://localhost:5000/patients').then(res => setPatients(res.data));
+      axios.get('https://krpcc.onrender.com/patients').then(res => setPatients(res.data));
     }
   }, [isLoggedIn]);
 
